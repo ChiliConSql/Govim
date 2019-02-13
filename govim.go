@@ -36,6 +36,9 @@ func main() {
 	if err := g.SetKeybinding("Editor", ':', gocui.ModNone, commands); err != nil {
 		log.Fatal(err)
 	}
+	if err := g.SetKeybinding("Commands", gocui.KeyEnter, gocui.ModNone, edit); err != nil {
+		log.Fatal(err)
+	}
 	if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
 		log.Fatal(err)
 	}
@@ -47,5 +50,12 @@ func quit(g *gocui.Gui, v *gocui.View) error {
 
 func commands(g *gocui.Gui, v *gocui.View) error {
 	_, err := g.SetCurrentView("Commands")
+	return err
+}
+
+func edit(g *gocui.Gui, v *gocui.View) error {
+	parseCommands(v.ViewBuffer())
+	v.Clear()
+	_, err := g.SetCurrentView("Editor")
 	return err
 }

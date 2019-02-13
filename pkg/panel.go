@@ -53,6 +53,10 @@ func (p Panel) Layout(g *gocui.Gui) error {
 			}
 			fmt.Fprintln(v, flist)
 		case "Status":
+			fmt.Fprintln(v, "")
+		case "Commands":
+			fmt.Fprintln(v, p.Body)
+			defer v.Clear()
 		default:
 			fmt.Fprintln(v, p.Body)
 		}

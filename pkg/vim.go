@@ -58,6 +58,35 @@ func (ve *VimEditor) NormalMode(v *gocui.View, key gocui.Key, ch rune, mod gocui
 		v.MoveCursor(-1, 0, false)
 	case 'l':
 		v.MoveCursor(1, 0, false)
+	case ':':
+
 	}
 	// TODO: handle other keybindings...
+}
+
+func (ve *VimEditor) CommandMode(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
+	switch ch {
+	case 'x':
+		v.EditDelete(false)
+	case 'i':
+		ve.Insert = true
+	case 'j':
+		v.MoveCursor(0, 1, false)
+	case 'k':
+		v.MoveCursor(0, -1, false)
+	case 'h':
+		v.MoveCursor(-1, 0, false)
+	case 'l':
+		v.MoveCursor(1, 0, false)
+	case ':':
+
+	}
+	// TODO: handle other keybindings...
+}
+
+func edit(g *gocui.Gui, v *gocui.View) error {
+	parseCommands(v.ViewBuffer())
+	v.Clear()
+	_, err := g.SetCurrentView("Editor")
+	return err
 }
