@@ -1,6 +1,8 @@
 package govim
 
-import "github.com/jroimartin/gocui"
+import (
+	"github.com/jroimartin/gocui"
+)
 
 type VimEditor struct {
 	Insert bool
@@ -43,16 +45,18 @@ func (ve *VimEditor) InsertMode(v *gocui.View, key gocui.Key, ch rune, mod gocui
 }
 
 func (ve *VimEditor) NormalMode(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
-	switch {
-	case ch == 'i':
+	switch ch {
+	case 'x':
+		v.EditDelete(false)
+	case 'i':
 		ve.Insert = true
-	case ch == 'j':
+	case 'j':
 		v.MoveCursor(0, 1, false)
-	case ch == 'k':
+	case 'k':
 		v.MoveCursor(0, -1, false)
-	case ch == 'h':
+	case 'h':
 		v.MoveCursor(-1, 0, false)
-	case ch == 'l':
+	case 'l':
 		v.MoveCursor(1, 0, false)
 	}
 	// TODO: handle other keybindings...

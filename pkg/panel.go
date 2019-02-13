@@ -20,11 +20,11 @@ func (p Panel) Layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
+		v.Editor = &VimEditor{Insert: false}
+		v.Editable = true
 		switch p.Name {
 		case "Editor":
-			v.Editable = true
 			v.Wrap = true
-			v.Editor = &VimEditor{}
 			if _, err := g.SetCurrentView(p.Name); err != nil {
 				return err
 			}
@@ -52,6 +52,7 @@ func (p Panel) Layout(g *gocui.Gui) error {
 				flist += file.Name() + "\n"
 			}
 			fmt.Fprintln(v, flist)
+		case "Status":
 		default:
 			fmt.Fprintln(v, p.Body)
 		}
@@ -61,17 +62,3 @@ func (p Panel) Layout(g *gocui.Gui) error {
 	}
 	return nil
 }
-
-/*
-func NewGui() (*Gui, error) {
-	file, err := os.Open("example.txt")
-	if err != nil {
-		return nil, err
-	}
-	f, err := file.Stat()
-	if err != nil {
-		return nil, err
-	}
-	return &Gui{mode: &Mode{mode: "Normal", file: f, selectedLine: 0}}, nil
-}
-*/

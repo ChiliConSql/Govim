@@ -21,10 +21,11 @@ func main() {
 
 	maxX, maxY := g.Size()
 	flistpanel := &govim.Panel{Name: "Flist", Body: "file list(work in progress)", X0: -1, Y0: -1, X1: maxX/6 - 1, Y1: maxY}
-	statusbar := &govim.Panel{Name: "Status", Body: "StatusBar(work in progress)", X0: maxX / 6, Y0: maxY - 3, X1: maxX, Y1: maxY}
+	statusbar := &govim.Panel{Name: "Status", Body: "StatusBar(work in progress)", X0: maxX / 6, Y0: maxY - 4, X1: maxX, Y1: maxY - 2}
+	commandsbar := &govim.Panel{Name: "Commands", Body: "CommandsBar(work in progress)", X0: maxX / 6, Y0: maxY - 2, X1: maxX, Y1: maxY}
 	numbar := &govim.Panel{Name: "Numbar", Body: "RowNumber(work in progress)", X0: maxX / 6, Y0: -1, X1: maxX/6 + 4, Y1: maxY - 3}
 	editpanel := &govim.Panel{Name: "Editor", Body: "EditPanel(work in progress)", X0: maxX/6 + 4, Y0: -1, X1: maxX, Y1: maxY - 3, File: os.Args[1]}
-	g.SetManager(flistpanel, statusbar, numbar, editpanel)
+	g.SetManager(flistpanel, statusbar, commandsbar, numbar, editpanel)
 	//g.SetManagerFunc(govim.Layout)
 
 	g.InputEsc = true
@@ -32,7 +33,9 @@ func main() {
 	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
 		log.Fatal(err)
 	}
-
+	if err := g.SetKeybinding("Editor", ':', gocui.ModNone, commands); err != nil {
+		log.Fatal(err)
+	}
 	if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
 		log.Fatal(err)
 	}
@@ -40,4 +43,9 @@ func main() {
 
 func quit(g *gocui.Gui, v *gocui.View) error {
 	return gocui.ErrQuit
+}
+
+func commands(g *gocui.Gui, v *gocui.View) error {
+	_, err := g.SetCurrentView("Commands")
+	return err
 }
