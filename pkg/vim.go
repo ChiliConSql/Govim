@@ -1,6 +1,10 @@
 package govim
 
 import (
+	"fmt"
+	"log"
+	"strings"
+
 	"github.com/jroimartin/gocui"
 )
 
@@ -17,6 +21,11 @@ func (ve *VimEditor) Edit(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modif
 }
 
 func (ve *VimEditor) InsertMode(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
+	if v.Name() == "Commands" && key == gocui.KeyEnter {
+		parseCommands(v.ViewBuffer())
+		v.Clear()
+		ve.Insert = false
+	}
 	switch {
 	case key == gocui.KeyEsc:
 		ve.Insert = false
@@ -59,34 +68,17 @@ func (ve *VimEditor) NormalMode(v *gocui.View, key gocui.Key, ch rune, mod gocui
 	case 'l':
 		v.MoveCursor(1, 0, false)
 	case ':':
-
-	}
-	// TODO: handle other keybindings...
-}
-
-func (ve *VimEditor) CommandMode(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
-	switch ch {
-	case 'x':
-		v.EditDelete(false)
-	case 'i':
 		ve.Insert = true
-	case 'j':
-		v.MoveCursor(0, 1, false)
-	case 'k':
-		v.MoveCursor(0, -1, false)
-	case 'h':
-		v.MoveCursor(-1, 0, false)
-	case 'l':
-		v.MoveCursor(1, 0, false)
-	case ':':
-
 	}
 	// TODO: handle other keybindings...
 }
 
-func edit(g *gocui.Gui, v *gocui.View) error {
-	parseCommands(v.ViewBuffer())
-	v.Clear()
-	_, err := g.SetCurrentView("Editor")
-	return err
+func parseCommands(s string) {
+	strings.Map(func(r rune) rune {
+		switch r {
+		case 'q':
+			log.Fatal(fmt.Errorf("Exit...\n"))
+		}
+		return r
+	}, s)
 }
