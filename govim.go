@@ -13,7 +13,7 @@ func main() {
 	if len(os.Args) < 2 {
 		fmt.Fprintln(os.Stderr, fmt.Errorf("File not given\n"))
 	}
-	g := govim.New(gocui.OutputNormal, os.Args[1])
+	g := govim.New(gocui.Output256, os.Args[1])
 	defer g.Close()
 
 	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, govim.Quit); err != nil {

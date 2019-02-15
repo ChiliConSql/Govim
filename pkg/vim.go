@@ -1,7 +1,6 @@
 package govim
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -88,7 +87,7 @@ func (ve *VimEditor) parseCommands(v *gocui.View, key gocui.Key, ch rune, mod go
 		case 'w':
 
 		case 'q':
-			log.Fatal(fmt.Errorf("Exit...\n"))
+			log.Fatal(gocui.ErrQuit)
 		}
 		return r
 	}, v.ViewBuffer())

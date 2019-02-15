@@ -31,7 +31,7 @@ func (g *Gui) init() {
 	g.Panels = append(g.Panels, &Panel{Name: "Status", Body: "StatusBar(work in progress)", X0: maxX / 6, Y0: maxY - 4, X1: maxX, Y1: maxY - 2})
 	g.Panels = append(g.Panels, &Panel{Name: "Commands", Body: "CommandsBar(work in progress)", X0: maxX / 6, Y0: maxY - 2, X1: maxX, Y1: maxY})
 	g.Panels = append(g.Panels, &Panel{Name: "Numbar", Body: "RowNumber(work in progress)", X0: maxX / 6, Y0: -1, X1: maxX/6 + 4, Y1: maxY - 3})
-	g.Panels = append(g.Panels, &Panel{Name: "Editor", Body: g.renderContent(), X0: maxX/6 + 4, Y0: -1, X1: maxX, Y1: maxY - 3, File: FileRead(g.File)})
+	g.Panels = append(g.Panels, &Panel{Name: "Editor", Body: g.renderContent(), X0: maxX/6 + 4, Y0: -1, X1: maxX, Y1: maxY - 3, File: FileRead(g.File, 0)})
 
 	for _, panel := range g.Panels {
 		if err := panel.SetView(g.Gui); err != nil {
@@ -136,10 +136,18 @@ func getFiles() string {
 	return flist
 }
 
-func FileRead(filename string) *os.File {
-	fp, err := os.Create(filename)
-	if err != nil {
-		panic(err)
+func FileRead(filename string, rmflg int) *os.File {
+	if rmflg == 1 {
+		fp, err := os.Create(filename)
+		if err != nil {
+			panic(err)
+		}
+		return fp
+	} else {
+		fp, err := os.Open(filename)
+		if err != nil {
+			panic(err)
+		}
+		return fp
 	}
-	return fp
 }
